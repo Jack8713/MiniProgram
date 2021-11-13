@@ -1,14 +1,30 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
+    "pages/players/players",
+    "pages/mine/mine",
     "pages/logs/logs"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Weixin",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "Logs",
+      "iconPath": "Icon/log.png",
+      "selectedIconPath": "Icon/selog.png"
+    }, {
+      "pagePath": "pages/players/players",
+      "text": "players",
+      "iconPath": "Icon/music.png",
+      "selectedIconPath": "Icon/smusic.png"
+    }]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
+
 }

@@ -36,16 +36,17 @@ Page({
     }
   },
 
-  getMusic(){
+  getMusic() {
     wx.request({
       url: "https://api.obfs.dev/api/netease/search",
       data: {
         s: this.data.songName
       },
       success: (response) => {
-        console.log(response.data.result.songs)
-        this.musicList = response.data.result.songs;
-        //this.songName = "";
+        this.setData({
+          musicList: response.data.result.songs
+        })
+        console.log(this.data.musicList)
       }
     })
   },
@@ -58,22 +59,56 @@ Page({
           this.mvshow = true;
         }), err => {}
   },
+
   playMusic(item) {
-    axios.get('https://api.obfs.dev/api/netease/song?id=' + item.id)
-      .then(
-        response => {
-          this.data.musicUrl = response.data.data[0].url;
-        }), err => {}
-    axios.get('https://api.obfs.dev/api/netease/comments?id=' + item.id)
-      .then(
-        response => {
-          this.data.commentList = response.data.hotComments;
-        }), err => {}
-    axios.get('https://api.obfs.dev/api/netease/album?id=' + item.al.id)
-      .then(
-        response => {
-          this.data.picUrl = response.data.album.picUrl;
-        }), err => {}
+    wx.request({
+      url: 'https://api.obfs.dev/api/netease/song',
+      data: {
+        id: item.currentTarget.dataset.id
+      },
+      success: (response) => {
+        this.setData({
+          musicUrl: response.data.data[0].url
+        })
+      }
+    })
+    wx.request({
+      url: 'https://api.obfs.dev/api/netease/comments',
+      data: {
+        id: item.currentTarget.dataset.id
+      },
+      success: (response) => {
+        this.setData({
+          commentList: response.data.hotComments
+        })
+      }
+    })
+    wx.request({
+      url: 'https://api.obfs.dev/api/netease/album',
+      data: {
+        id: item.currentTarget.dataset.gid
+      },
+      success: (response) => {
+        this.setData({
+          picUrl: response.data.album.picUrl
+        })
+      }
+    })
+    wx.request({
+      url: 'https://api.obfs.dev/api/netease/lyric',
+      data: {
+        id: item.currentTarget.dataset.id
+      },
+      success: (response) => {
+        this.setData({
+          lyric: (response.data.lrc.lyric).replace(/[\\r\\n]/g, '')
+        })
+      }
+    })
+  },
+
+
+  playMusicaxios(item) {
     axios.get('https://api.obfs.dev/api/netease/lyric?id=' + item.id)
       .then(
         response => {
@@ -86,18 +121,22 @@ Page({
           }
         }), err => {}
   },
+
+
   play() {
     this.isPlay = true
   },
   pause() {
     this.isPlay = false
   },
+
+  
   handleLrc(v) {
     var lyrics = v.split('[')
     v.split('[').map(v => {
-      this.lrcList.push(v.slice(9))
+      this.data.lrcList.push(v.slice(9))
     })
-    this.lrcList.shift()
+    this.data.lrcList.shift()
     lyrics.shift()
     var b = []
     lyrics.map(v => {
@@ -125,9 +164,9 @@ Page({
     return lrcObj
   },
   onTimeupdate() {
-    this.sliderTime = parseInt(myaudio.currentTime / myaudio.maxTime * 100)
-    if (this.lyric !== '暂无歌词') {
-      this.lrcObj.map((v, index) => {
+    this.data.sliderTime = parseInt(myaudio.currentTime / myaudio.maxTime * 100)
+    if (this.data.lyric !== '暂无歌词') {
+      this.data.lrcObj.map((v, index) => {
         if (v.T === Math.floor(myaudio.currentTime)) {
           this.data.lrcIndex = index
           this.data.currentLrc = player.lrcObj[this.data.lrcIndex]["V"]
