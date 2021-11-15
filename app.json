@@ -18,8 +18,8 @@
       "iconPath": "Icon/log.png",
       "selectedIconPath": "Icon/selog.png"
     }, {
-      "pagePath": "pages/players/players",
-      "text": "players",
+      "pagePath": "pages/mine/mine",
+      "text": "mine",
       "iconPath": "Icon/music.png",
       "selectedIconPath": "Icon/smusic.png"
     }]
